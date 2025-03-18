@@ -64,6 +64,7 @@ extern volatile S32 gGridIterActive;
 void xGridBoundInit(xGridBound* gridb, void* data);
 void xGridKill(xGrid* grid);
 void xGridEmpty(xGrid* grid);
+S32 xGridAdd(xGrid* grid, xEnt* ent);
 S32 xGridRemove(xGridBound* gridb);
 xGridBound** xGridGetCell(xGrid* grid, const xEnt* ent, S32& grx, S32& grz);
 void xGridGetCell(xGrid* grid, F32 posx, F32 posy, F32 posz, S32& grx, S32& grz);
@@ -75,6 +76,5 @@ xGridBound* xGridIterNextCell(xGridIterator& it);
 void xGridIterClose(xGridIterator& it);
 void xGridCheckPosition(xGrid* grid, xVec3* pos, xQCData* qcd, GridEntCallback hitCB, void* cbdata);
 S32 xGridEntIsTooBig(xGrid* grid, const xEnt* ent);
-S32 xGridAdd(xGrid* grid, xEnt* ent);
 
 #endif

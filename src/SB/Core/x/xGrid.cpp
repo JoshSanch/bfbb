@@ -121,7 +121,7 @@ bool xGridAddToCell(xGridBound** boundList, xGridBound* bound)
     return true;
 }
 
-void xGridAdd(xGrid* grid, xGridBound* bound, S32 x, S32 z)
+S32 xGridAdd(xGrid* grid, xGridBound* bound, S32 x, S32 z)
 {
     xGridAddToCell(&grid->cells[z * grid->nx] + x, bound);
 }
