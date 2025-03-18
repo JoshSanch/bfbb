@@ -126,6 +126,164 @@ S32 xGridAdd(xGrid* grid, xGridBound* bound, S32 x, S32 z)
     xGridAddToCell(&grid->cells[z * grid->nx] + x, bound);
 }
 
+// FIXME: m2c wouldn't get me much further with this one
+S32 xGridAdd(xGrid* grid, xEnt* ent)
+{
+    f32 temp_f0;
+    f32 temp_f10;
+    f32 temp_f11;
+    f32 temp_f11_2;
+    f32 temp_f12;
+    f32 temp_f13;
+    f32 temp_f2;
+    f32 temp_f2_2;
+    f32 temp_f31;
+    f32 temp_f3;
+    f32 temp_f3_2;
+    f32 temp_f3_3;
+    f32 temp_f4;
+    f32 temp_f5;
+    f32 temp_f6;
+    f32 temp_f8;
+    f32 temp_f9;
+    f32 var_f0;
+    f32 var_f0_2;
+    f32 var_f2;
+    f32 var_f2_2;
+    s32 temp_r28;
+    s32 temp_r29;
+    s32 temp_r3;
+    s32 temp_r3_2;
+    s32 var_r3;
+    xMat4x3* temp_r3_3;
+
+    temp_f0 = grid->maxr;
+    switch (ent->bound.type)
+    {
+    case XBOUND_TYPE_SPHERE:
+        if (ent->bound.sph.r >= temp_f0)
+        {
+            var_r3 = xGridAddToCell(&grid->other, &ent->gridb);
+            if (var_r3 != 0)
+            {
+                ent->gridb.ingrid = grid->ingrid_id;
+                return var_r3;
+            }
+            return var_r3;
+        }
+        break;
+    case XBOUND_TYPE_OBB:
+        temp_r3_3 = ent->bound.mat;
+        temp_f3_2 = temp_r3_3->up.x;
+        temp_f2 = temp_r3_3->up.y;
+        temp_f6 = temp_r3_3->right.x;
+        temp_f8 = temp_r3_3->up.z;
+        temp_f5 = temp_r3_3->right.y;
+        temp_f9 = temp_r3_3->at.x;
+        temp_f31 = ent->bound.box.box.upper.y - ent->bound.box.box.lower.y;
+        temp_f11 = temp_r3_3->at.x;
+        temp_f13 = ent->bound.box.box.upper.x - ent->bound.box.box.lower.x;
+        temp_f10 = temp_r3_3->right.z;
+        temp_f11_2 = ent->bound.box.box.upper.z - ent->bound.box.box.upper.z;
+        temp_f12 = temp_r3_3->at.z;
+        if (((temp_f11_2 * temp_f11_2 *
+              ((temp_f12 * temp_f12) + ((temp_f9 * temp_f9) + (temp_f11 * temp_f11)))) +
+             ((temp_f13 * temp_f13 *
+               ((temp_f10 * temp_f10) + ((temp_f6 * temp_f6) + (temp_f5 * temp_f5)))) +
+              (temp_f31 * temp_f31 *
+               ((temp_f8 * temp_f8) + ((temp_f3_2 * temp_f3_2) + (temp_f2 * temp_f2)))))) >=
+            (4.0f * temp_f0 * temp_f0))
+        {
+            var_r3 = xGridAddToCell(&grid->other, &ent->gridb);
+            if (var_r3 != 0)
+            {
+                ent->gridb.ingrid = grid->ingrid_id;
+                return var_r3;
+            }
+            return var_r3;
+        }
+        break;
+    case XBOUND_TYPE_BOX:
+        temp_f3_3 = ent->bound.box.box.upper.z - ent->bound.box.box.upper.z;
+        temp_f2_2 = ent->bound.box.box.upper.x - ent->bound.box.box.lower.x;
+        if (((temp_f2_2 * temp_f2_2) + (temp_f3_3 * temp_f3_3)) >= (4.0f * temp_f0 * temp_f0))
+        {
+            var_r3 = xGridAddToCell(&grid->other, &ent->gridb);
+            if (var_r3 != 0)
+            {
+                ent->gridb.ingrid = grid->ingrid_id;
+                return var_r3;
+            }
+            return var_r3;
+        }
+        break;
+    default:
+        return 0;
+    }
+
+    temp_f3 = (ent->bound.box.center.x - grid->minx) * grid->inv_csizez;
+    var_f2 = 0.0f;
+    temp_f4 = (ent->bound.box.center.z - grid->minz) * grid->inv_csizex;
+    if (temp_f3 < 0.0f)
+    {
+    }
+    else
+    {
+        var_f2 = temp_f3;
+    }
+    temp_r3 = grid->nx - 1;
+    if ((f32)temp_r3 < var_f2)
+    {
+        var_f0 = (f32)temp_r3;
+    }
+    else
+    {
+        var_f0 = 0.0f;
+        if (temp_f3 < 0.0f)
+        {
+        }
+        else
+        {
+            var_f0 = temp_f3;
+        }
+    }
+    var_f2_2 = 0.0f;
+    temp_r29 = (s32)var_f0;
+    if (temp_f4 < 0.0f)
+    {
+    }
+    else
+    {
+        var_f2_2 = temp_f4;
+    }
+    temp_r3_2 = grid->nz - 1;
+    if ((f32)temp_r3_2 < var_f2_2)
+    {
+        var_f0_2 = (f32)temp_r3_2;
+    }
+    else
+    {
+        var_f0_2 = 0.0f;
+        if (temp_f4 < 0.0f)
+        {
+        }
+        else
+        {
+            var_f0_2 = temp_f4;
+        }
+    }
+    temp_r28 = (s32)var_f0_2;
+    if (xGridAdd(grid, &ent->gridb, temp_r29, temp_r28) != 0)
+    {
+        ent->gridb.gx = (s16)temp_r29;
+        ent->gridb.gz = (s16)temp_r28;
+        ent->gridb.ingrid = grid->ingrid_id;
+        return 1;
+    }
+
+    return 0;
+}
+
 S32 xGridRemove(xGridBound* bound)
 {
     if (bound->head)
